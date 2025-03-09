@@ -121,6 +121,7 @@ db.runCommand({
 
 // Create indexes
 db.students.createIndex({ faculty_id: 1, start_year: 1 });
+db.students.createIndex({ group: 1 });
 db.grades.createIndex({ grade: 1 });
 db.grades.createIndex({ student_id: 1, course_id: 1 }, { unique: true });
 db.professors.createIndex({ faculty_id: 1 });
@@ -157,6 +158,7 @@ db.students.insertOne({
    personal_info:"test",
    faculty_id:ObjectId("67cdc513dab804d1de51e944"),
    start_year:new Date("2015"),
+   group:"test",
    email:"my_lovely_email2@test.com"
 })
 
