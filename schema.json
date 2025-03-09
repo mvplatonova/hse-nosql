@@ -1,0 +1,155 @@
+{
+	"students": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"personal_info": {
+			"type": "string",
+			"required": true
+		},
+		"faculty_id": {
+			"foreignKey": true,
+			"references": "faculties",
+			"type": "Object",
+			"required": true
+		},
+		"start_year": {
+			"type": "Date",
+			"required": true
+		},
+		"email": {
+			"type": "string",
+			"required": true
+		},
+		"group": {
+			"type": "string",
+			"required": true
+		}
+	},
+	"professors": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"description": {
+			"type": "string",
+			"required": true
+		},
+		"faculty_id": {
+			"foreignKey": true,
+			"references": "faculties",
+			"type": "Object",
+			"required": true
+		},
+		"email": {
+			"type": "string",
+			"required": true
+		}
+	},
+	"courses": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"professor_id": {
+			"foreignKey": true,
+			"references": "professors",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"description": {
+			"type": "string",
+			"required": true
+		},
+		"credits": {
+			"type": "number",
+			"required": true
+		}
+	},
+	"domains": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"description": {
+			"type": "string",
+			"required": true
+		},
+		"faculty_id": {
+			"foreignKey": true,
+			"references": "faculties",
+			"type": "Object",
+			"required": true
+		}
+	},
+	"grades": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"student_id": {
+			"foreignKey": true,
+			"references": "students",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"course_id": {
+			"foreignKey": true,
+			"references": "courses",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"type": {
+			"type": "string",
+			"required": true
+		},
+		"grade": {
+			"type": "number",
+			"required": true
+		},
+		"date": {
+			"type": "Date",
+			"required": true
+		}
+	},
+	"faculties": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"description": {
+			"type": "string",
+			"required": true
+		}
+	}
+}
