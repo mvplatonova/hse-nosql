@@ -1,0 +1,57 @@
+1. Find the student
+db.students.findOne({ _id: ObjectId("some_id") });
+
+2. Find all students from one group
+db.students.find({ group: "my-lovely-group" });
+
+3. Find the avg grade of the student
+db.grades.aggregate([
+  { $match: { student_id: ObjectId("some_id") } },
+  { $group: { _id: null, avgGrade: { $avg: "$grade" } } }
+]);
+
+4. Add new students
+db.students.insertMany({
+  name: "Some name1",
+  group: "group",
+  start_year: new Date("2019"),
+  email: "test@test.com"
+},
+{
+  name: "Some name2",
+  group: "group",
+  start_year: new Date("2019"),
+  email: "test@test.com"
+});
+
+5. Find all courses by the professor
+db.courses.find({ professor_id: ObjectId("some_id") });
+
+6. Add new course
+db.courses.insertOne({
+  name: "My favorite course",
+  description: "some good desc",
+  professor_id: ObjectId("some_id"),
+  credits: 3
+});
+
+7. Add the student's exam result
+db.grades.insertOne({
+  student_id: ObjectId("some_id"),
+  course_id: ObjectId("some_id"),
+  type: "exam"
+  grade: 2,
+  date: ISODate("2025-02-09")
+});
+
+8. Update the student's exam result
+db.grades.updateOne(
+  { student_id: ObjectId("some_id"), course_id: ObjectId("some_id") },
+  { $set: { grade: 5 } }
+);
+
+9. Recieve all students with good grades in the course
+db.grades.find({ "course_id": ObjectId("some_id"), "grade": { $gt: 3 } })
+
+10. Delete all grades of the student 
+db.grades.deleteMany({ "student_id": ObjectId("some_id") })
