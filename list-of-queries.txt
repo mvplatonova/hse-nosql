@@ -6,7 +6,7 @@ db.students.find({ group: "my-lovely-group" });
 
 3. Find the avg grade of the student
 db.grades.aggregate([
-  { $match: { student_id: ObjectId("some_id") } },
+  { $match: { student_id: ObjectId("some_id"), grade: { $nin: [0, 1] } } },
   { $group: { _id: null, avgGrade: { $avg: "$grade" } } }
 ]);
 
