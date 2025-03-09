@@ -20,6 +20,9 @@ students:
   email:
     type: string
     required: true
+  group:
+    type: string
+    required: true
 professors:
   _id:
     primaryKey: true
