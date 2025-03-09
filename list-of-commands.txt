@@ -1,0 +1,169 @@
+//Create collections
+db.createCollection("faculties")
+db.createCollection("domains")
+db.createCollection("professors")
+db.createCollection("students")
+db.createCollection("courses")
+db.createCollection("grades")
+
+
+//Add constraints
+db.runCommand({
+   collMod: "faculties",
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["name"],
+         properties: {
+            name: { bsonType: "string" }
+         }
+      }
+   }
+})
+
+db.runCommand({
+   collMod: "domains",
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["name", "faculty_id"],
+         properties: {
+            name: { bsonType: "string" },
+            faculty_id: { bsonType: "objectId" }
+         }
+      }
+   }
+})
+
+db.runCommand({
+   collMod: "professors",
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["name", "faculty_id"],
+         properties: {
+            name: { bsonType: "string" },
+            faculty_id: { bsonType: "objectId" },
+            email: { bsonType: "string", pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" }
+         }
+      }
+   }
+})
+
+
+db.runCommand({
+   collMod: "courses",
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["name", "credits", "professor_id"],
+         properties: {
+            name: { bsonType: "string" },
+            credits: { bsonType: "number" },
+            professor_id: { bsonType: "objectId" }
+         }
+      }
+   }
+})
+
+db.runCommand({
+   collMod: "students",
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["name", "faculty_id", "start_year"],
+         properties: {
+            name: { bsonType: "string" },
+            faculty_id: { bsonType: "objectId" },
+            start_year: { bsonType: "date" },
+            email: { bsonType: "string", pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" }
+         }
+      }
+   }
+})
+
+db.runCommand({
+   collMod: "grades",
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["grade", "type", "student_id", "course_id", "date"],
+         properties: {
+            grade: { bsonType: "int" },
+            type: {  bsonType: "string", enum: ["exam", "credit"]},
+            student_id: { bsonType: "objectId" },
+            course_id: { bsonType: "objectId" },
+            date: { bsonType: "date" }
+         }
+      },
+      $expr: {
+         $or: [
+           {
+             $and: [
+               { $eq: ["$type", "exam"] },
+               { $and: [
+                 { $gte: ["$grade", 2] },
+                 { $lte: ["$grade", 5] }
+               ]}
+             ]
+           },
+           {
+             $and: [
+               { $eq: ["type", "credit"] },
+               { $in: ["$grade", [0, 1]] }
+             ]
+           }
+         ]
+       }
+   }
+})
+
+
+// Create indexes
+db.students.createIndex({ faculty_id: 1, start_year: 1 });
+db.grades.createIndex({ grade: 1 });
+db.grades.createIndex({ student_id: 1, course_id: 1 }, { unique: true });
+db.professors.createIndex({ faculty_id: 1 });
+
+
+//Insert one test value to all collections
+db.faculties.insertOne({
+   name:"test",
+   description:"test"
+})
+
+db.domains.insertOne({
+   name:"test",
+   description:"test",
+   faculty_id:ObjectId("67cdc513dab804d1de51e944")
+})
+
+db.professors.insertOne({
+   name:"test",
+   description:"test",
+   faculty_id:ObjectId("67cdc513dab804d1de51e944"),
+   email:"my_lovely_email1@test.com"
+})
+
+db.courses.insertOne({
+   name:"test",
+   professor_id:ObjectId("67cdc53bdab804d1de51e946"),
+   description:"test",
+   credits:3
+})
+
+db.students.insertOne({
+   name:"test",
+   personal_info:"test",
+   faculty_id:ObjectId("67cdc513dab804d1de51e944"),
+   start_year:new Date("2015"),
+   email:"my_lovely_email2@test.com"
+})
+
+db.grades.insertOne({
+   student_id:ObjectId("67cdc5dcdab804d1de51e949"),
+   course_id:ObjectId("67cdc586dab804d1de51e948"),
+   type:"exam",
+   grade:4,
+   date:ISODate("2015-02-01")
+})
